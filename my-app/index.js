@@ -8,6 +8,8 @@ const githubLink =  { name: "Github", url: "https://github.com/vin20777/cloudfla
 const links = [linkedInLink, appsLink, githubLink]
 const linksJSONResponse = links.map((link) => JSON.stringify(link))
 
+const beginPage = "https://static-links-page.signalnerve.workers.dev"
+
 /**
  * Respond with hello worker text
  * @param {Request} request
@@ -23,7 +25,7 @@ async function handleRequest(request) {
     })
   }
 
-  return new Response('Hello worker!', {
-    headers: { 'content-type': 'text/plain' }
-  })
+  const starter = await fetch(beginPage, { headers: { 'content-type': 'text/html;charset=UTF-8' } })
+  return new HTMLRewriter()
+  .transform(starter)
 }
