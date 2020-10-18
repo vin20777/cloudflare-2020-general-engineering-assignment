@@ -27,5 +27,17 @@ async function handleRequest(request) {
 
   const starter = await fetch(beginPage, { headers: { 'content-type': 'text/html;charset=UTF-8' } })
   return new HTMLRewriter()
+  .on("div#links", new LinksTransformer(links))
   .transform(starter)
+}
+
+class LinksTransformer {
+  constructor(links) {
+    this.links = links
+  }
+  
+  async element(element) {
+    var content = this.links.map((link) => `<a href="${link.url}">${link.name}</a>`).join("\n")
+    element.setInnerContent(content, { html: true })
+  }
 }
