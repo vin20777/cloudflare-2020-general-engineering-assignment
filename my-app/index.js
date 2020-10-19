@@ -1,6 +1,6 @@
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
-})
+/**
+ * Cloudflare 2020 General Engineering Assignment
+ */
 
 const linkedInLink =  { name: "LinkedIn", url: "https://www.linkedin.com/in/yu-ting-tsao-a68262a2/"}
 const appsLink =  { name: "App Store", url: "https://apps.apple.com/us/developer/yu-ting-tsao/id1328112477"}
@@ -9,6 +9,10 @@ const links = [linkedInLink, appsLink, githubLink]
 const linksJSONResponse = links.map((link) => JSON.stringify(link))
 
 const beginPage = "https://static-links-page.signalnerve.workers.dev"
+
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
 
 /**
  * Respond with hello worker text
@@ -25,8 +29,12 @@ async function handleRequest(request) {
     })
   }
 
-  const starter = await fetch(beginPage, { headers: { 'content-type': 'text/html;charset=UTF-8' } })
+  const starter = await fetch(beginPage, { 
+    headers: { 'content-type': 'text/html;charset=UTF-8' } 
+  })
   return new HTMLRewriter()
+  // Rewrite elements in profile and those under it.
+  .on("div#profile, div#profile > *", new ProfileTransformer())
   .on("div#links", new LinksTransformer(links))
   .transform(starter)
 }
@@ -35,9 +43,28 @@ class LinksTransformer {
   constructor(links) {
     this.links = links
   }
-  
+
   async element(element) {
     var content = this.links.map((link) => `<a href="${link.url}">${link.name}</a>`).join("\n")
     element.setInnerContent(content, { html: true })
+  }
+}
+
+class ProfileTransformer {
+  
+  name = "Yu-Ting Tsao"
+  profileURL = "https://avatars1.githubusercontent.com/u/31400661?s=400&u=a8fc69c9df97c7362cb130d153b4960b71445779&v=4"
+  
+  async element(element) {
+    // https://developers.cloudflare.com/workers/runtime-apis/html-rewriter
+    const tag = element["tagName"]
+    // remove the display: none
+    if (tag == "div") {
+      element.setAttribute("style", "")
+    } else if (tag == "img") {
+      element.setAttribute("src", this.profileURL)
+    } else if (tag == "h1") {
+      element.setInnerContent(this.name)
+    }
   }
 }
