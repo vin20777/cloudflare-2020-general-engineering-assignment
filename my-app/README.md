@@ -1,15 +1,10 @@
-# 👷 `worker-template` Hello World
+## Hello World
 
-A template for kick starting a Cloudflare worker project.
+I am mainly an iOS developer in my past experience. However, I follow the [wrangler](https://github.com/cloudflare/wrangler)
+tutorial to finish this challenge and have lots of fun! Thank you guys 🥳.
 
-[`index.js`](https://github.com/cloudflare/worker-template/blob/master/index.js) is the content of the Workers script.
+## Links
 
-#### Wrangler
+[Final Result](https://my-app.hello2021.workers.dev/)
 
-To generate using [wrangler](https://github.com/cloudflare/wrangler)
-
-```
-wrangler generate projectname https://github.com/cloudflare/worker-template
-```
-
-Further documentation for Wrangler can be found [here](https://developers.cloudflare.com/workers/tooling/wrangler).
+[API](https://my-app.hello2021.workers.dev/links)
