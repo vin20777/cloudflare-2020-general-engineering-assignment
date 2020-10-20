@@ -31,7 +31,7 @@ async function handleRequest(request) {
 
   const myTitle = "Yu-Ting Tsao"
   // https://tailwindcss.com/docs/customizing-colors
-  const niceTheme = "bg-teal-700"
+  const niceTheme = pickRandomTheme()
 
   const starter = await fetch(beginPage, { 
     headers: { 'content-type': 'text/html;charset=UTF-8' } 
@@ -44,6 +44,16 @@ async function handleRequest(request) {
   .on("div#links", new LinksTransformer(links))
   .on("div#social", new SocialTransformer())
   .transform(starter)
+}
+
+function pickRandomTheme() {
+  const colors = ["red", "orange", "yellow", "green",
+                  "teal", "blue", "indigo", "purple", 
+                  "pink"]
+  // For example: "bg-teal-700" (200 ~ 800)
+  let randomTheme = "bg-" + colors[Math.floor(Math.random() * colors.length)] + "-" 
+                  + (Math.floor(Math.random() * 7) + 2) * 100    
+  return randomTheme
 }
 
 class LinksTransformer {
