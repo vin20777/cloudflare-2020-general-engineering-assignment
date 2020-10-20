@@ -29,11 +29,14 @@ async function handleRequest(request) {
     })
   }
 
+  const myTitle = "Yu-Ting Tsao"
+
   const starter = await fetch(beginPage, { 
     headers: { 'content-type': 'text/html;charset=UTF-8' } 
   })
   return new HTMLRewriter()
   // Rewrite elements in profile and those under it.
+  .on("title", new TitleTransformer(myTitle))
   .on("div#profile, div#profile > *", new ProfileTransformer())
   .on("div#links", new LinksTransformer(links))
   .on("div#social", new SocialTransformer())
@@ -72,7 +75,7 @@ class ProfileTransformer {
 
 // Extra credit: Provide social links
 class SocialTransformer {
-  
+
   mediumSource =  { url: "https://medium.com/@vin20777", svg: "https://simpleicons.org/icons/medium.svg"}
   portfolioSource =  { url: "https://vin20777.wixsite.com/helloworld", svg: "https://simpleicons.org/icons/wix.svg"}
   sources = [this.mediumSource, this.portfolioSource]
@@ -81,5 +84,16 @@ class SocialTransformer {
     element.setAttribute("style", "")
     var content = this.sources.map((source) => `<a href="${source.url}"><image src="${source.svg}"/></a>`).join("\n")
     element.setInnerContent(content, { html: true })
+  }
+}
+
+// Extra credit: Change title
+class TitleTransformer {
+  constructor(title) {
+    this.title = title
+  }
+
+  async element(element) {
+    element.setInnerContent(this.title)
   }
 }
