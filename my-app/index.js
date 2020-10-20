@@ -30,6 +30,8 @@ async function handleRequest(request) {
   }
 
   const myTitle = "Yu-Ting Tsao"
+  // https://tailwindcss.com/docs/customizing-colors
+  const niceTheme = "bg-teal-700"
 
   const starter = await fetch(beginPage, { 
     headers: { 'content-type': 'text/html;charset=UTF-8' } 
@@ -37,6 +39,7 @@ async function handleRequest(request) {
   return new HTMLRewriter()
   // Rewrite elements in profile and those under it.
   .on("title", new TitleTransformer(myTitle))
+  .on("body", new BodyClassTransformer(niceTheme))
   .on("div#profile, div#profile > *", new ProfileTransformer())
   .on("div#links", new LinksTransformer(links))
   .on("div#social", new SocialTransformer())
@@ -95,5 +98,16 @@ class TitleTransformer {
 
   async element(element) {
     element.setInnerContent(this.title)
+  }
+}
+
+// Extra credit: Change the background color
+class BodyClassTransformer {
+  constructor(theme) {
+    this.theme = theme
+  }
+
+  async element(element) {
+    element.setAttribute("class", this.theme)
   }
 }
