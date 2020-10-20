@@ -36,6 +36,7 @@ async function handleRequest(request) {
   // Rewrite elements in profile and those under it.
   .on("div#profile, div#profile > *", new ProfileTransformer())
   .on("div#links", new LinksTransformer(links))
+  .on("div#social", new SocialTransformer())
   .transform(starter)
 }
 
@@ -66,5 +67,19 @@ class ProfileTransformer {
     } else if (tag == "h1") {
       element.setInnerContent(this.name)
     }
+  }
+}
+
+// Extra credit: Provide social links
+class SocialTransformer {
+  
+  mediumSource =  { url: "https://medium.com/@vin20777", svg: "https://simpleicons.org/icons/medium.svg"}
+  portfolioSource =  { url: "https://vin20777.wixsite.com/helloworld", svg: "https://simpleicons.org/icons/wix.svg"}
+  sources = [this.mediumSource, this.portfolioSource]
+  
+  async element(element) {
+    element.setAttribute("style", "")
+    var content = this.sources.map((source) => `<a href="${source.url}"><image src="${source.svg}"/></a>`).join("\n")
+    element.setInnerContent(content, { html: true })
   }
 }
